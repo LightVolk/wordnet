@@ -11,27 +11,74 @@ public class SAP
 	
 	public int length(int v, int w)
 	{
-		return -1;
+		if(v == w)
+			return 0;
+		
+		int result = length(G.adj(v), G.adj(w));
+		
+		if(result != -1)
+		{
+			return result;
+		}
+		else
+		{
+			Iterator<Integer> itV = G.adj(v).iterator();
+			Iterator<Integer> itW = G.adj(w).iterator();
+			
+			if(v > w && itV.hasNext())
+				return 1 + length(itV.next(), w);
+			else if(v < w && itW.hasNext())
+				return 1 + length(v, itW.next());
+			else
+				return -1;
+		}
 	}
 	
 	public int ancestor(int v, int w)
 	{
-		int result = -1;
-		Iterator<Integer> itV = G.adj(v).iterator(); 
-		Iterator<Integer> itW = G.adj(w).iterator();
+		if(v == w)
+			return v;
 		
-				
-		Integer currentV, currentW;
-		while(itV.hasNext() || itW.hasNext())
+		int result = ancestor(G.adj(v), G.adj(w));
+		if(result != -1)
 		{
-			//if(itV.hasNext())
+			return result;
 		}
-		return result;
+		else
+		{
+			Iterator<Integer> itV = G.adj(v).iterator();
+			Iterator<Integer> itW = G.adj(w).iterator();
+			
+			if(v > w && itV.hasNext())
+				return ancestor(itV.next(), w);
+			else if(v < w && itW.hasNext())
+				return ancestor(v, itW.next());
+			else
+				return -1;
+		}
 	}
 	
 	public int length(Iterable<Integer> v, Iterable<Integer> w)
 	{
-		return -1;
+		int result = -1;
+		Iterator<Integer> itV = v.iterator();
+		Integer tmpInt = -1;
+		boolean ancestorFound = false;
+		while(itV.hasNext() && !ancestorFound)
+		{
+			tmpInt = itV.next();
+			Iterator<Integer> itW = w.iterator();
+			while(itW.hasNext())
+			{
+				if(tmpInt == itW.next())
+				{
+					ancestorFound = true;
+					result = 2;
+					break;
+				}
+			}
+		}	
+		return result;
 	}
 	
 	public int ancestor(Iterable<Integer> v, Iterable<Integer> w)
@@ -46,7 +93,7 @@ public class SAP
 			Iterator<Integer> itW = w.iterator();
 			while(itW.hasNext())
 			{
-				if(tmpInt != itW.next())
+				if(tmpInt == itW.next())
 				{
 					ancestorFound = true;
 					result = tmpInt;
@@ -54,17 +101,18 @@ public class SAP
 				}
 			}
 		}
-		
 		return result;
 	}
-	
 	
 	public static void main(String[] args) 
 	{
     	In in = new In("csv/digraph1.txt");
     	Digraph di = new Digraph(in);
-    	System.out.println(di.toString());
-    	
+    	//System.out.println(di);
+    	SAP sap = new SAP(di);
+    	//ancestor
+    	System.out.println(sap.ancestor(12, 7));
+    	//length
+    	System.out.println(sap.length(12, 7));
 	}
-
 }
