@@ -12,6 +12,7 @@ public class WordNet
 	//private String[] nouns;
 	private HashMap<String, Integer> nouns;
 	private HashMap<Integer, String> ints;
+	
 	public WordNet(String synsets, String hypernums)
 	{
 		readSynsets(synsets);
@@ -35,20 +36,25 @@ public class WordNet
 		this.di = new Digraph(ids.size());
 		
 		//initialize dictionary
-		this.nouns = new HashMap<String, Integer>(ids.size());
-		this.ints = new HashMap<Integer, String>(ids.size());
+		this.nouns = new HashMap<String, Integer>();
+		this.ints = new HashMap<Integer, String>();
 		
 		Iterator<Integer> itId = ids.iterator();
 		Iterator<String> itNouns = n.iterator();
 		
 		int id = -1;
 		String noun = null;
+		String [] syns = null;
 		while(itId.hasNext() && itNouns.hasNext())
 		{
 			id = itId.next();
 			noun = itNouns.next();
 			
-			this.nouns.put(noun, id);
+			syns = noun.split(" ");
+			
+			for(String syn : syns)
+				this.nouns.put(syn, id);
+			
 			this.ints.put(id,noun);
 		}
 	}
@@ -64,7 +70,7 @@ public class WordNet
 			line = in.readLine().split(",");
 			id = new Integer(line[0]);
 			for(int i = 1; i < line.length; i++)
-				di.addEdge(new Integer(line[i]), id);
+				di.addEdge(id, new Integer(line[i]));
 		}
 	}
 	
@@ -90,6 +96,7 @@ public class WordNet
 	{
 		int v = getNounIndex(nounA);
 		int w = getNounIndex(nounB);
+		
 		if(v != -1 && w != -1)
 		{
 			SAP sap = new SAP(this.di);
@@ -103,6 +110,7 @@ public class WordNet
 	{
 		int intA = getNounIndex(nounA);
 		int intB = getNounIndex(nounB);
+		
 		if(intA != -1 && intB != -1)
 		{
 			SAP sap = new SAP(this.di);
@@ -132,9 +140,7 @@ public class WordNet
 	{
 		// TODO Auto-generated method stub
 		WordNet wordnet = new WordNet("csv/synsets.txt", "csv/hypernyms.txt");
-		System.out.println(wordnet.getNumNouns());
-		System.out.println(wordnet.isNoun("hui"));
-		
+		System.out.println(wordnet.distance("American_water_spaniel", "histology"));
 	}
 
 }

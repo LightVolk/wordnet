@@ -33,12 +33,12 @@ public class SAP
 		
 		while(!qV.isEmpty() && !qW.isEmpty())
 		{	
-			if(qV.peek() == qW.peek())
+			if(qV.peek().equals(qW.peek()))
 			{
 				result = qV.peek();
 				break;
 			}
-			else if(qV.peek() > qW.peek())
+			else if(qV.peek().intValue() > qW.peek().intValue())
 				qV.pop();
 			else
 				qW.pop();
@@ -78,7 +78,7 @@ public class SAP
 				result = qV.peek();
 				break;
 			}
-			else if(qV.peek() > qW.peek())
+			else if(qV.peek().intValue() > qW.peek().intValue())
 				qV.pop();
 			else
 				qW.pop();
