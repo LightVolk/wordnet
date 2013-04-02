@@ -1,3 +1,5 @@
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 
@@ -7,8 +9,9 @@ public class WordNet
 	 * @param args
 	 */
 	private Digraph di;
-	private String[] nouns;
-	
+	//private String[] nouns;
+	private HashMap<String, Integer> nouns;
+	private HashMap<Integer, String> ints;
 	public WordNet(String synsets, String hypernums)
 	{
 		readSynsets(synsets);
@@ -30,7 +33,24 @@ public class WordNet
 		}
 		
 		this.di = new Digraph(ids.size());
-		this.nouns = n.toArray(new String[n.size()]);
+		
+		//initialize dictionary
+		this.nouns = new HashMap<String, Integer>(ids.size());
+		this.ints = new HashMap<Integer, String>(ids.size());
+		
+		Iterator<Integer> itId = ids.iterator();
+		Iterator<String> itNouns = n.iterator();
+		
+		int id = -1;
+		String noun = null;
+		while(itId.hasNext() && itNouns.hasNext())
+		{
+			id = itId.next();
+			noun = itNouns.next();
+			
+			this.nouns.put(noun, id);
+			this.ints.put(id,noun);
+		}
 	}
 	
 	private void readHypernums(String hypernums)
@@ -48,35 +68,63 @@ public class WordNet
 		}
 	}
 	
-	public boolean isNoun(String word)
+	public boolean isNoun(String noun)
 	{
-		boolean result = false;
-		
-		for(int i = 0; i < this.nouns.length; i++)
-		{
-			if(this.nouns[i].equals(word))
-			{
-				result = true;
-				break;
-			}
-		}
-		
-		return result;
+		return this.nouns.containsKey(noun);
+	}
+	
+	public int getNounIndex(String noun)
+	{
+		if(this.nouns.containsKey(noun))
+			return this.nouns.get(noun);
+		else
+			return -1;
 	}
 	
 	public int getNumNouns()
 	{
-		return this.nouns.length;
+		return this.nouns.size();
 	}
-	
 	
 	public int distance(String nounA, String nounB)
 	{
+		int v = getNounIndex(nounA);
+		int w = getNounIndex(nounB);
+		if(v != -1 && w != -1)
+		{
+			SAP sap = new SAP(this.di);
+			return sap.length(v, w);
+		}
+		
 		return -1;
 	}
 	
 	public String sap(String nounA, String nounB)
 	{
+		int intA = getNounIndex(nounA);
+		int intB = getNounIndex(nounB);
+		if(intA != -1 && intB != -1)
+		{
+			SAP sap = new SAP(this.di);
+			int ancestor = sap.ancestor(intA, intB);
+			
+			BreadthFirstDirectedPaths bfsA = new BreadthFirstDirectedPaths(this.di, intA);
+			BreadthFirstDirectedPaths bfsB = new BreadthFirstDirectedPaths(this.di, intB);
+			
+			Iterable<Integer> bfsAPath = bfsA.pathTo(ancestor);
+			Iterable<Integer> bfsBPath = bfsB.pathTo(ancestor);
+			StringBuilder sb = new StringBuilder();
+			
+			for(int v : bfsAPath)
+				sb.append((v == intA) ? this.ints.get(v): "->" + this.ints.get(v));
+			
+			sb.append(" ");
+			
+			for(int v : bfsBPath)
+				sb.append((v == intB) ? this.ints.get(v): "->" + this.ints.get(v));
+
+			return sb.toString();
+		}
 		return null;
 	}
 	

@@ -1,5 +1,3 @@
-import javax.xml.transform.Source;
-
 
 public class BreadthFirstDirectedPaths {
     private static final int INFINITY = Integer.MAX_VALUE;
@@ -85,6 +83,18 @@ public class BreadthFirstDirectedPaths {
         path.push(x);
         return path;
     }
+    
+    public Stack<Integer> marked()
+    {
+    	Stack<Integer> st = new Stack<Integer>();
+    	for(int i = 0; i < this.marked.length; i++)
+    	{
+    		if(this.marked[i])
+    			st.push(i);
+    	}
+    	
+    	return st;
+    }
 
     public static void main(String[] args) {
         In in = new In("csv/digraph1.txt");
@@ -92,14 +102,12 @@ public class BreadthFirstDirectedPaths {
         // StdOut.println(G);
 
         
-        int s = 11;
-        Bag<Integer> sources = new Bag<Integer>();
-        sources.add(11);
-        sources.add(2);
-        BreadthFirstDirectedPaths bfs = new BreadthFirstDirectedPaths(G, sources);
+        int s = 7;
+        BreadthFirstDirectedPaths bfs = new BreadthFirstDirectedPaths(G, s);
 
         for (int v = 0; v < G.V(); v++) {
-            if (bfs.hasPathTo(v)) {
+            if (bfs.hasPathTo(v))
+            {
                 StdOut.printf("%d to %d (%d):  ", s, v, bfs.distTo(v));
                 for (int x : bfs.pathTo(v)) {
                     if (x == s) StdOut.print(x);
@@ -107,6 +115,7 @@ public class BreadthFirstDirectedPaths {
                 }
                 StdOut.println();
             }
+
             else {
                 StdOut.printf("%d to %d (-):  not connected\n", s, v);
             }

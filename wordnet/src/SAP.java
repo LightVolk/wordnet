@@ -1,5 +1,3 @@
-import java.util.Iterator;
-
 
 public class SAP 
 {
@@ -11,96 +9,81 @@ public class SAP
 	
 	public int length(int v, int w)
 	{
-		if(v == w)
-			return 0;
-		
-		int result = length(G.adj(v), G.adj(w));
-		
-		if(result != -1)
+		int ancestor = ancestor(v, w);
+		if(ancestor != -1)
 		{
-			return result;
-		}
-		else
-		{
-			Iterator<Integer> itV = G.adj(v).iterator();
-			Iterator<Integer> itW = G.adj(w).iterator();
+			BreadthFirstDirectedPaths bfsV = new BreadthFirstDirectedPaths(this.G, v);
+			BreadthFirstDirectedPaths bfsW = new BreadthFirstDirectedPaths(this.G, w);
 			
-			if(v > w && itV.hasNext())
-				return 1 + length(itV.next(), w);
-			else if(v < w && itW.hasNext())
-				return 1 + length(v, itW.next());
-			else
-				return -1;
+			return bfsV.distTo(ancestor) + bfsW.distTo(ancestor);
 		}
+		
+		return -1;
 	}
 	
 	public int ancestor(int v, int w)
 	{
-		if(v == w)
-			return v;
+		BreadthFirstDirectedPaths bfsV = new BreadthFirstDirectedPaths(this.G, v);
+		BreadthFirstDirectedPaths bfsW = new BreadthFirstDirectedPaths(this.G, w);
 		
-		int result = ancestor(G.adj(v), G.adj(w));
-		if(result != -1)
-		{
-			return result;
-		}
-		else
-		{
-			Iterator<Integer> itV = G.adj(v).iterator();
-			Iterator<Integer> itW = G.adj(w).iterator();
-			
-			if(v > w && itV.hasNext())
-				return ancestor(itV.next(), w);
-			else if(v < w && itW.hasNext())
-				return ancestor(v, itW.next());
+		Stack<Integer> qV = bfsV.marked();
+		Stack<Integer> qW = bfsW.marked();
+		
+		int result = -1;
+		
+		while(!qV.isEmpty() && !qW.isEmpty())
+		{	
+			if(qV.peek() == qW.peek())
+			{
+				result = qV.peek();
+				break;
+			}
+			else if(qV.peek() > qW.peek())
+				qV.pop();
 			else
-				return -1;
+				qW.pop();
 		}
+		
+		return result;
 	}
-	
+
 	public int length(Iterable<Integer> v, Iterable<Integer> w)
 	{
-		int result = -1;
-		Iterator<Integer> itV = v.iterator();
-		Integer tmpInt = -1;
-		boolean ancestorFound = false;
-		while(itV.hasNext() && !ancestorFound)
+		int ancestor = ancestor(v,w);
+		if(ancestor != -1)
 		{
-			tmpInt = itV.next();
-			Iterator<Integer> itW = w.iterator();
-			while(itW.hasNext())
-			{
-				if(tmpInt == itW.next())
-				{
-					ancestorFound = true;
-					result = 2;
-					break;
-				}
-			}
-		}	
-		return result;
+			BreadthFirstDirectedPaths bfsV = new BreadthFirstDirectedPaths(this.G, v);
+			BreadthFirstDirectedPaths bfsW = new BreadthFirstDirectedPaths(this.G, w);
+			
+			return bfsV.distTo(ancestor) + bfsW.distTo(ancestor);
+		}
+		
+		return -1;
 	}
 	
 	public int ancestor(Iterable<Integer> v, Iterable<Integer> w)
 	{
+		BreadthFirstDirectedPaths bfsV = new BreadthFirstDirectedPaths(this.G, v);
+		BreadthFirstDirectedPaths bfsW = new BreadthFirstDirectedPaths(this.G, w);
+		
+		Stack<Integer> qV = bfsV.marked();
+		Stack<Integer> qW = bfsW.marked();
+		
 		int result = -1;
-		Iterator<Integer> itV = v.iterator();
-		Integer tmpInt = -1;
-		boolean ancestorFound = false;
-		while(itV.hasNext() && !ancestorFound)
+		
+		while(!qV.isEmpty() && !qW.isEmpty())
 		{
-			tmpInt = itV.next();
-			Iterator<Integer> itW = w.iterator();
-			while(itW.hasNext())
+			if(qV.peek() == qW.peek())
 			{
-				if(tmpInt == itW.next())
-				{
-					ancestorFound = true;
-					result = tmpInt;
-					break;
-				}
+				result = qV.peek();
+				break;
 			}
+			else if(qV.peek() > qW.peek())
+				qV.pop();
+			else
+				qW.pop();
 		}
+		
 		return result;
 	}
 	
