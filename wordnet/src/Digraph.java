@@ -10,7 +10,8 @@ public class Digraph {
      * Create an empty digraph with V vertices.
      * @throws java.lang.IllegalArgumentException if V < 0
      */
-    public Digraph(int V) {
+    @SuppressWarnings("unchecked")
+	public Digraph(int V) {
         if (V < 0) throw new IllegalArgumentException("Number of vertices in a Digraph must be nonnegative");
         this.V = V;
         this.E = 0;
@@ -23,7 +24,8 @@ public class Digraph {
    /**
      * Create a digraph from input stream.
      */  
-    public Digraph(In in)
+    @SuppressWarnings("unchecked")
+	public Digraph(In in)
     {
         try 
         {
