@@ -10,7 +10,7 @@ public class WordNet
 	 */
 	private Digraph di;
 	//private String[] nouns;
-	private HashMap<String, Integer> nouns;
+	private HashMap<String, Bag<Integer>> nouns;
 	private HashMap<Integer, String> ints;
 	
 	public WordNet(String synsets, String hypernums)
@@ -36,7 +36,7 @@ public class WordNet
 		this.di = new Digraph(ids.size());
 		
 		//initialize dictionary
-		this.nouns = new HashMap<String, Integer>();
+		this.nouns = new HashMap<String, Bag<Integer>>();
 		this.ints = new HashMap<Integer, String>();
 		
 		Iterator<Integer> itId = ids.iterator();
@@ -49,11 +49,20 @@ public class WordNet
 		{
 			id = itId.next();
 			noun = itNouns.next();
-			
 			syns = noun.split(" ");
-			
 			for(String syn : syns)
-				this.nouns.put(syn, id);
+			{
+				if(!this.nouns.containsKey(syn))
+				{
+					Bag<Integer> newBag = new Bag<Integer>();
+					newBag.add(id);
+					this.nouns.put(syn, newBag);
+				}
+				else
+				{
+					this.nouns.get(syn).add(id);
+				}
+			}
 			
 			this.ints.put(id,noun);
 		}
@@ -79,12 +88,12 @@ public class WordNet
 		return this.nouns.containsKey(noun);
 	}
 	
-	public int getNounIndex(String noun)
+	public Bag<Integer> getNounIndex(String noun)
 	{
 		if(this.nouns.containsKey(noun))
 			return this.nouns.get(noun);
 		else
-			return -1;
+			return null;
 	}
 	
 	public int getNumNouns()
@@ -94,10 +103,10 @@ public class WordNet
 	
 	public int distance(String nounA, String nounB)
 	{
-		int v = getNounIndex(nounA);
-		int w = getNounIndex(nounB);
+		Bag<Integer> v = getNounIndex(nounA);
+		Bag<Integer> w = getNounIndex(nounB);
 		
-		if(v != -1 && w != -1)
+		if(v != null && w != null)
 		{
 			SAP sap = new SAP(this.di);
 			return sap.length(v, w);
@@ -108,10 +117,10 @@ public class WordNet
 	
 	public String sap(String nounA, String nounB)
 	{
-		int intA = getNounIndex(nounA);
-		int intB = getNounIndex(nounB);
+		Bag<Integer> intA = getNounIndex(nounA);
+		Bag<Integer> intB = getNounIndex(nounB);
 		
-		if(intA != -1 && intB != -1)
+		if(intA != null && intB != null)
 		{
 			SAP sap = new SAP(this.di);
 			int ancestor = sap.ancestor(intA, intB);
@@ -124,12 +133,12 @@ public class WordNet
 			StringBuilder sb = new StringBuilder();
 			
 			for(int v : bfsAPath)
-				sb.append((v == intA) ? this.ints.get(v): "->" + this.ints.get(v));
+				sb.append("->" + this.ints.get(v));
 			
-			sb.append(" ");
+			sb.append(" | ");
 			
 			for(int v : bfsBPath)
-				sb.append((v == intB) ? this.ints.get(v): "->" + this.ints.get(v));
+				sb.append("->" + this.ints.get(v));
 
 			return sb.toString();
 		}
@@ -140,7 +149,20 @@ public class WordNet
 	{
 		// TODO Auto-generated method stub
 		WordNet wordnet = new WordNet("csv/synsets.txt", "csv/hypernyms.txt");
-		System.out.println(wordnet.distance("American_water_spaniel", "histology"));
+		//System.out.println(wordnet.distance("histology","American_water_spaniel"));
+		//System.out.println(wordnet.sap("histology","American_water_spaniel"));
+		
+		
+		System.out.println(wordnet.distance("horse","zebra"));
+		System.out.println(wordnet.distance("horse","cat"));
+		System.out.println(wordnet.distance("horse","bear"));
+		System.out.println(wordnet.distance("horse","table"));
+		
+		//System.out.println(wordnet.sap("horse", "zebra"));
+		//System.out.println(wordnet.distance("horse", "zebra"));
+		
+		//System.out.println(wordnet.sap("horse", "table"));
+		//System.out.println(wordnet.distance("horse", "table"));
 	}
 
 }

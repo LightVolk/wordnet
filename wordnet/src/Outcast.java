@@ -10,26 +10,32 @@ public class Outcast
 	
 	public String outcast(String[] nouns)
 	{
-		int maxDistance, tmpDist;
-		maxDistance = tmpDist = -1;
+		int maxDistance = -1;
+		int maxDistanceIndex = -1;
+
+		int [][] distances = new int[nouns.length][nouns.length];
 		
-		String maxDistanceNoun = null;
-		String n1 = nouns[0];
-		for(String n2: nouns)
+		for(int i = 0; i < nouns.length; i++)
 		{
-			if(!n1.equals(n2))
-			{
-				tmpDist = this.wordnet.distance(n1, n2);
-				System.out.println(n1 + " " + n2 + " : " + tmpDist);
-				if(tmpDist > maxDistance)
-				{
-					maxDistance = tmpDist;
-					maxDistanceNoun = n2;
-				}
-			}
+			for(int j = 0; j < nouns.length; j++)
+				distances [i][j] = (i == j) ? 0 : this.wordnet.distance(nouns[i],nouns[j]); 
 		}
 		
-		return maxDistanceNoun;
+		for(int i = 0; i < distances[0].length; i++)
+		{
+			int sumDistance = 0;
+			
+			for(int j = 0; j < distances[i].length; j++)
+				sumDistance += distances[i][j];
+			
+			if(sumDistance > maxDistance)
+			{
+				maxDistance = sumDistance;
+				maxDistanceIndex = i;
+			}
+		}
+		System.out.println(maxDistance);
+		return nouns[maxDistanceIndex];
 	}
 	
 	/**
@@ -48,7 +54,6 @@ public class Outcast
 	    	String[] nouns = in.readAllStrings();
 	        StdOut.println(outcastFiles[t] + ": " + outcast.outcast(nouns));
 	    }
-
 	}
 
 }

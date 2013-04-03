@@ -23,20 +23,29 @@ public class SAP
 	
 	public int ancestor(int v, int w)
 	{
+
 		BreadthFirstDirectedPaths bfsV = new BreadthFirstDirectedPaths(this.G, v);
+		Stack<Integer> qV = bfsV.getMarked();
+		
 		BreadthFirstDirectedPaths bfsW = new BreadthFirstDirectedPaths(this.G, w);
+		Stack<Integer> qW = bfsW.getMarked();
 		
-		Stack<Integer> qV = bfsV.marked();
-		Stack<Integer> qW = bfsW.marked();
-		
+		int minDistance = -1;
+		int tmpDistance = -1;
 		int result = -1;
 		
 		while(!qV.isEmpty() && !qW.isEmpty())
 		{	
 			if(qV.peek().equals(qW.peek()))
 			{
-				result = qV.peek();
-				break;
+				tmpDistance = bfsV.distTo(qV.peek().intValue()) + bfsW.distTo(qW.peek().intValue()); 
+				if(tmpDistance < minDistance || minDistance == -1)
+				{
+					minDistance = tmpDistance;
+					result = qV.peek();
+				}
+				qV.pop();
+				qW.pop();
 			}
 			else if(qV.peek().intValue() > qW.peek().intValue())
 				qV.pop();
@@ -66,17 +75,25 @@ public class SAP
 		BreadthFirstDirectedPaths bfsV = new BreadthFirstDirectedPaths(this.G, v);
 		BreadthFirstDirectedPaths bfsW = new BreadthFirstDirectedPaths(this.G, w);
 		
-		Stack<Integer> qV = bfsV.marked();
-		Stack<Integer> qW = bfsW.marked();
+		Stack<Integer> qV = bfsV.getMarked();
+		Stack<Integer> qW = bfsW.getMarked();
 		
+		int minDistance = -1;
+		int tmpDistance = -1;
 		int result = -1;
 		
 		while(!qV.isEmpty() && !qW.isEmpty())
-		{
-			if(qV.peek() == qW.peek())
+		{	
+			if(qV.peek().equals(qW.peek()))
 			{
-				result = qV.peek();
-				break;
+				tmpDistance = bfsV.distTo(qV.peek().intValue()) + bfsW.distTo(qW.peek().intValue()); 
+				if(tmpDistance < minDistance || minDistance == -1)
+				{
+					minDistance = tmpDistance;
+					result = qV.peek();
+				}
+				qV.pop();
+				qW.pop();
 			}
 			else if(qV.peek().intValue() > qW.peek().intValue())
 				qV.pop();

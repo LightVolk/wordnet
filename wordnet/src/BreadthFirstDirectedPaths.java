@@ -1,7 +1,10 @@
+import java.util.Arrays;
+
 
 public class BreadthFirstDirectedPaths {
     private static final int INFINITY = Integer.MAX_VALUE;
     private boolean[] marked;  // marked[v] = is there an s->v path?
+    private Stack<Integer> markedVertex;
     private int[] edgeTo;      // edgeTo[v] = last edge on shortest s->v path
     private int[] distTo;      // distTo[v] = length of shortest s->v path
 
@@ -10,6 +13,7 @@ public class BreadthFirstDirectedPaths {
         marked = new boolean[G.V()];
         distTo = new int[G.V()];
         edgeTo = new int[G.V()];
+        
         for (int v = 0; v < G.V(); v++) distTo[v] = INFINITY;
         bfs(G, s);
     }
@@ -17,6 +21,7 @@ public class BreadthFirstDirectedPaths {
     // multiple sources
     public BreadthFirstDirectedPaths(Digraph G, Iterable<Integer> sources) {
         marked = new boolean[G.V()];
+        
         distTo = new int[G.V()];
         edgeTo = new int[G.V()];
         for (int v = 0; v < G.V(); v++) distTo[v] = INFINITY;
@@ -26,7 +31,11 @@ public class BreadthFirstDirectedPaths {
     // BFS from single source
     private void bfs(Digraph G, int s) {
         Queue<Integer> q = new Queue<Integer>();
+        
+        
         marked[s] = true;
+        
+        
         distTo[s] = 0;
         q.enqueue(s);
         while (!q.isEmpty()) {
@@ -35,7 +44,10 @@ public class BreadthFirstDirectedPaths {
                 if (!marked[w]) {
                     edgeTo[w] = v;
                     distTo[w] = distTo[v] + 1;
+                    
                     marked[w] = true;
+                    
+                    
                     q.enqueue(w);
                 }
             }
@@ -45,8 +57,13 @@ public class BreadthFirstDirectedPaths {
     // BFS from multiple sources
     private void bfs(Digraph G, Iterable<Integer> sources) {
         Queue<Integer> q = new Queue<Integer>();
+        
+        
         for (int s : sources) {
+        	
             marked[s] = true;
+            
+            
             distTo[s] = 0;
             q.enqueue(s);
         }
@@ -56,7 +73,10 @@ public class BreadthFirstDirectedPaths {
                 if (!marked[w]) {
                     edgeTo[w] = v;
                     distTo[w] = distTo[v] + 1;
+                    
                     marked[w] = true;
+                    
+                    
                     q.enqueue(w);
                 }
             }
@@ -84,16 +104,13 @@ public class BreadthFirstDirectedPaths {
         return path;
     }
     
-    public Stack<Integer> marked()
+    public Stack<Integer> getMarked()
     {
-    	Stack<Integer> st = new Stack<Integer>();
-    	for(int i = 0; i < this.marked.length; i++)
-    	{
-    		if(this.marked[i])
-    			st.push(i);
-    	}
+    	markedVertex = new Stack<Integer>();
+    	for(int i = 0; i < marked.length; i++)
+    		if(marked[i]) markedVertex.push(i);
     	
-    	return st;
+    	return markedVertex;
     }
 
     public static void main(String[] args) {
