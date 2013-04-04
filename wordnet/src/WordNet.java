@@ -13,12 +13,17 @@ public class WordNet
 	private HashMap<String, Bag<Integer>> nouns;
 	private HashMap<Integer, String> ints;
 	
-	public WordNet(String synsets, String hypernums)
+	public WordNet(String synsets, String hypernyms)
 	{
 		readSynsets(synsets);
-		readHypernums(hypernums);
+		readHypernyms(hypernyms);
 	}
 	
+	/**
+	 * 
+	 * Read the synset files and construct reference data structures for easy lookup.
+	 * 
+	 */
 	private void readSynsets(String synsets)
 	{
 		In in = new In(synsets);
@@ -68,9 +73,13 @@ public class WordNet
 		}
 	}
 	
-	private void readHypernums(String hypernums)
+	/**
+	 * 
+	 * Read the hypernym files 
+	 */
+	private void readHypernyms(String hypernyms)
 	{
-		In in = new In(hypernums);
+		In in = new In(hypernyms);
 		
 		String[] line = null;
 		Integer id;
@@ -88,7 +97,13 @@ public class WordNet
 		return this.nouns.containsKey(noun);
 	}
 	
-	public Bag<Integer> getNounIndex(String noun)
+	public Iterable<String> nouns()
+	{
+		return this.nouns.keySet();
+	}
+	
+	
+	private Bag<Integer> getNounIndex(String noun)
 	{
 		if(this.nouns.containsKey(noun))
 			return this.nouns.get(noun);
@@ -96,11 +111,10 @@ public class WordNet
 			return null;
 	}
 	
-	public int getNumNouns()
-	{
-		return this.nouns.size();
-	}
-	
+	/**
+	 * 
+	 * Calculates the distances between two nouns
+	 */
 	public int distance(String nounA, String nounB)
 	{
 		Bag<Integer> v = getNounIndex(nounA);
@@ -115,6 +129,9 @@ public class WordNet
 		return -1;
 	}
 	
+	/**
+	 * Find the SAP between nounA and nounB. The result is presented as a string 
+	 */
 	public String sap(String nounA, String nounB)
 	{
 		Bag<Integer> intA = getNounIndex(nounA);
@@ -131,12 +148,12 @@ public class WordNet
 			StringBuilder sb = new StringBuilder();
 			
 			for(int v : bfsA.pathTo(ancestor))
-				sb.append("->" + this.ints.get(v));
+				sb.append((sb.length() == 0)? this.ints.get(v): "->" + this.ints.get(v));
 			
 			sb.append(" | ");
 			
 			for(int v : bfsB.pathTo(ancestor))
-				sb.append("->" + this.ints.get(v));
+				sb.append((sb.length() == 0)? this.ints.get(v): "->" + this.ints.get(v));
 
 			return sb.toString();
 		}
@@ -145,22 +162,6 @@ public class WordNet
 	
 	public static void main(String[] args)
 	{
-		// TODO Auto-generated method stub
-		WordNet wordnet = new WordNet("csv/synsets.txt", "csv/hypernyms.txt");
-		//System.out.println(wordnet.distance("histology","American_water_spaniel"));
-		//System.out.println(wordnet.sap("histology","American_water_spaniel"));
-		
-		
-		System.out.println(wordnet.distance("horse","zebra"));
-		System.out.println(wordnet.distance("horse","cat"));
-		System.out.println(wordnet.distance("horse","bear"));
-		System.out.println(wordnet.distance("horse","table"));
-		
-		//System.out.println(wordnet.sap("horse", "zebra"));
-		//System.out.println(wordnet.distance("horse", "zebra"));
-		
-		//System.out.println(wordnet.sap("horse", "table"));
-		//System.out.println(wordnet.distance("horse", "table"));
 	}
 
 }
