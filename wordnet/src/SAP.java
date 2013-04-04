@@ -5,7 +5,7 @@ public class SAP
 	
 	public SAP(Digraph G)
 	{
-		this.G = G;
+		this.G = new Digraph(G);
 	}
 	
 	/**

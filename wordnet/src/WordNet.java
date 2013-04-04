@@ -102,20 +102,19 @@ public class WordNet
 		return this.nouns.keySet();
 	}
 	
-	
-	private Bag<Integer> getNounIndex(String noun)
+	private Bag<Integer> getNounIndex(String noun) throws IllegalArgumentException
 	{
 		if(this.nouns.containsKey(noun))
 			return this.nouns.get(noun);
 		else
-			return null;
+			throw new IllegalArgumentException("Noun is not in WordNet: " + noun);
 	}
 	
 	/**
 	 * 
 	 * Calculates the distances between two nouns
 	 */
-	public int distance(String nounA, String nounB)
+	public int distance(String nounA, String nounB) throws IllegalArgumentException
 	{
 		Bag<Integer> v = getNounIndex(nounA);
 		Bag<Integer> w = getNounIndex(nounB);
@@ -130,9 +129,9 @@ public class WordNet
 	}
 	
 	/**
-	 * Find the SAP between nounA and nounB. The result is presented as a string 
+	 * Find the SAP between nounA and nounB.
 	 */
-	public String sap(String nounA, String nounB)
+	public String sap(String nounA, String nounB) throws IllegalArgumentException
 	{
 		Bag<Integer> intA = getNounIndex(nounA);
 		Bag<Integer> intB = getNounIndex(nounB);
@@ -141,22 +140,10 @@ public class WordNet
 		{
 			SAP sap = new SAP(this.di);
 			int ancestor = sap.ancestor(intA, intB);
-			
-			DeluxeBFS bfsA = new DeluxeBFS(this.di, intA);
-			DeluxeBFS bfsB = new DeluxeBFS(this.di, intB);
-			
-			StringBuilder sb = new StringBuilder();
-			
-			for(int v : bfsA.pathTo(ancestor))
-				sb.append((sb.length() == 0)? this.ints.get(v): "->" + this.ints.get(v));
-			
-			sb.append(" | ");
-			
-			for(int v : bfsB.pathTo(ancestor))
-				sb.append((sb.length() == 0)? this.ints.get(v): "->" + this.ints.get(v));
-
-			return sb.toString();
+			if(ancestor != -1)
+				return this.ints.get(ancestor);
 		}
+		
 		return null;
 	}
 	
