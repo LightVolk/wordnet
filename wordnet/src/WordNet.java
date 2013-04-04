@@ -125,19 +125,17 @@ public class WordNet
 			SAP sap = new SAP(this.di);
 			int ancestor = sap.ancestor(intA, intB);
 			
-			BreadthFirstDirectedPaths bfsA = new BreadthFirstDirectedPaths(this.di, intA);
-			BreadthFirstDirectedPaths bfsB = new BreadthFirstDirectedPaths(this.di, intB);
+			DeluxeBFS bfsA = new DeluxeBFS(this.di, intA);
+			DeluxeBFS bfsB = new DeluxeBFS(this.di, intB);
 			
-			Iterable<Integer> bfsAPath = bfsA.pathTo(ancestor);
-			Iterable<Integer> bfsBPath = bfsB.pathTo(ancestor);
 			StringBuilder sb = new StringBuilder();
 			
-			for(int v : bfsAPath)
+			for(int v : bfsA.pathTo(ancestor))
 				sb.append("->" + this.ints.get(v));
 			
 			sb.append(" | ");
 			
-			for(int v : bfsBPath)
+			for(int v : bfsB.pathTo(ancestor))
 				sb.append("->" + this.ints.get(v));
 
 			return sb.toString();

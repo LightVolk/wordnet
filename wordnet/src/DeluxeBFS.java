@@ -1,5 +1,5 @@
 
-public class BreadthFirstDirectedPaths {
+public class DeluxeBFS {
     private static final int INFINITY = Integer.MAX_VALUE;
     private boolean[] marked;  // marked[v] = is there an s->v path?
     private Stack<Integer> markedVertex;
@@ -7,7 +7,7 @@ public class BreadthFirstDirectedPaths {
     private int[] distTo;      // distTo[v] = length of shortest s->v path
 
     // single source
-    public BreadthFirstDirectedPaths(Digraph G, int s) {
+    public DeluxeBFS(Digraph G, int s) {
         marked = new boolean[G.V()];
         distTo = new int[G.V()];
         edgeTo = new int[G.V()];
@@ -17,7 +17,7 @@ public class BreadthFirstDirectedPaths {
     }
 
     // multiple sources
-    public BreadthFirstDirectedPaths(Digraph G, Iterable<Integer> sources) {
+    public DeluxeBFS(Digraph G, Iterable<Integer> sources) {
         marked = new boolean[G.V()];
         
         distTo = new int[G.V()];
@@ -29,11 +29,7 @@ public class BreadthFirstDirectedPaths {
     // BFS from single source
     private void bfs(Digraph G, int s) {
         Queue<Integer> q = new Queue<Integer>();
-        
-        
         marked[s] = true;
-        
-        
         distTo[s] = 0;
         q.enqueue(s);
         while (!q.isEmpty()) {
@@ -42,10 +38,7 @@ public class BreadthFirstDirectedPaths {
                 if (!marked[w]) {
                     edgeTo[w] = v;
                     distTo[w] = distTo[v] + 1;
-                    
                     marked[w] = true;
-                    
-                    
                     q.enqueue(w);
                 }
             }
@@ -55,13 +48,8 @@ public class BreadthFirstDirectedPaths {
     // BFS from multiple sources
     private void bfs(Digraph G, Iterable<Integer> sources) {
         Queue<Integer> q = new Queue<Integer>();
-        
-        
         for (int s : sources) {
-        	
             marked[s] = true;
-            
-            
             distTo[s] = 0;
             q.enqueue(s);
         }
@@ -71,10 +59,7 @@ public class BreadthFirstDirectedPaths {
                 if (!marked[w]) {
                     edgeTo[w] = v;
                     distTo[w] = distTo[v] + 1;
-                    
                     marked[w] = true;
-                    
-                    
                     q.enqueue(w);
                 }
             }
@@ -118,7 +103,7 @@ public class BreadthFirstDirectedPaths {
 
         
         int s = 7;
-        BreadthFirstDirectedPaths bfs = new BreadthFirstDirectedPaths(G, s);
+        DeluxeBFS bfs = new DeluxeBFS(G, s);
 
         for (int v = 0; v < G.V(); v++) {
             if (bfs.hasPathTo(v))
@@ -130,11 +115,9 @@ public class BreadthFirstDirectedPaths {
                 }
                 StdOut.println();
             }
-
             else {
                 StdOut.printf("%d to %d (-):  not connected\n", s, v);
             }
-
         }
     }
 }

@@ -12,8 +12,8 @@ public class SAP
 		int ancestor = ancestor(v, w);
 		if(ancestor != -1)
 		{
-			BreadthFirstDirectedPaths bfsV = new BreadthFirstDirectedPaths(this.G, v);
-			BreadthFirstDirectedPaths bfsW = new BreadthFirstDirectedPaths(this.G, w);
+			DeluxeBFS bfsV = new DeluxeBFS(this.G, v);
+			DeluxeBFS bfsW = new DeluxeBFS(this.G, w);
 			
 			return bfsV.distTo(ancestor) + bfsW.distTo(ancestor);
 		}
@@ -24,10 +24,10 @@ public class SAP
 	public int ancestor(int v, int w)
 	{
 
-		BreadthFirstDirectedPaths bfsV = new BreadthFirstDirectedPaths(this.G, v);
+		DeluxeBFS bfsV = new DeluxeBFS(this.G, v);
 		Stack<Integer> qV = bfsV.getMarked();
 		
-		BreadthFirstDirectedPaths bfsW = new BreadthFirstDirectedPaths(this.G, w);
+		DeluxeBFS bfsW = new DeluxeBFS(this.G, w);
 		Stack<Integer> qW = bfsW.getMarked();
 		
 		int minDistance = -1;
@@ -61,8 +61,8 @@ public class SAP
 		int ancestor = ancestor(v,w);
 		if(ancestor != -1)
 		{
-			BreadthFirstDirectedPaths bfsV = new BreadthFirstDirectedPaths(this.G, v);
-			BreadthFirstDirectedPaths bfsW = new BreadthFirstDirectedPaths(this.G, w);
+			DeluxeBFS bfsV = new DeluxeBFS(this.G, v);
+			DeluxeBFS bfsW = new DeluxeBFS(this.G, w);
 			
 			return bfsV.distTo(ancestor) + bfsW.distTo(ancestor);
 		}
@@ -72,8 +72,8 @@ public class SAP
 	
 	public int ancestor(Iterable<Integer> v, Iterable<Integer> w)
 	{
-		BreadthFirstDirectedPaths bfsV = new BreadthFirstDirectedPaths(this.G, v);
-		BreadthFirstDirectedPaths bfsW = new BreadthFirstDirectedPaths(this.G, w);
+		DeluxeBFS bfsV = new DeluxeBFS(this.G, v);
+		DeluxeBFS bfsW = new DeluxeBFS(this.G, w);
 		
 		Stack<Integer> qV = bfsV.getMarked();
 		Stack<Integer> qW = bfsW.getMarked();
