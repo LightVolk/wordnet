@@ -11,11 +11,13 @@ public class WordNet
 	// private String[] nouns;
 	private HashMap<String, Bag<Integer>> nouns;
 	private HashMap<Integer, String> ints;
-
+	private SAP sap;
+	
 	public WordNet(String synsets, String hypernyms)
 	{
 		readSynsets(synsets);
 		readHypernyms(hypernyms);
+		this.sap = new SAP(this.di);
 	}
 
 	/**
@@ -122,10 +124,7 @@ public class WordNet
 		Bag<Integer> w = getNounIndex(nounB);
 
 		if(v != null && w != null)
-		{
-			SAP sap = new SAP(this.di);
 			return sap.length(v, w);
-		}
 
 		return -1;
 	}
@@ -141,7 +140,6 @@ public class WordNet
 
 		if(intA != null && intB != null)
 		{
-			SAP sap = new SAP(this.di);
 			int ancestor = sap.ancestor(intA, intB);
 			if(ancestor != -1)
 				return this.ints.get(ancestor);

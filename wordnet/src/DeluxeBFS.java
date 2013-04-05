@@ -23,7 +23,7 @@ public class DeluxeBFS
 			distTo[v] = INFINITY;
 		bfs(G, s);
 	}
-
+	
 	// multiple sources
 	public DeluxeBFS(Digraph G, Iterable<Integer> sources)
 	{

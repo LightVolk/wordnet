@@ -51,7 +51,7 @@ public class Outcast
 	 */
 	public static void main(String[] args)
 	{
-		/*  */
+		/* 
 		WordNet wordnet = new WordNet("csv/synsets.txt", "csv/hypernyms.txt");
 		Outcast outcast = new Outcast(wordnet);
 		In in = null;
@@ -63,7 +63,7 @@ public class Outcast
 			String[] nouns = in.readAllStrings();
 			StdOut.println(outcastFiles[t] + ": " + outcast.outcast(nouns));
 		}
-
+		*/ 
 	}
 
 }
