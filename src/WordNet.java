@@ -15,9 +15,12 @@ import java.util.Iterator;
 
 public class WordNet {
     
-   private static  Bag<String> SynsetStrings = new Bag<>(),HyperNymsStrings = new Bag<>();
-   private static Bag<String> Nouns=new Bag<String>();
-   private static Bag<Integer> IndexesOfNouns=new Bag<Integer>();
+   private static  Bag<String> _synsetStrings = new Bag<>(),HyperNymsStrings = new Bag<>();
+   private static Bag<String> _Nouns=new Bag<String>();
+   private static Bag<Integer> _indexesOfNouns=new Bag<Integer>();
+   private static SAP _sap;
+   private Digraph di;
+   
    public static int V=10;
     public WordNet(String synsets,String hypernyms)
     {
@@ -26,19 +29,22 @@ public class WordNet {
       In in_syn = new In(synsets);
       while(in_syn.hasNextLine())
           {
-              SynsetStrings.add(in_syn.readLine());
+              _synsetStrings.add(in_syn.readLine());
           }
       In in_hyp=new In(hypernyms);
       while(in_hyp.hasNextLine())
       {
           HyperNymsStrings.add(in_hyp.readLine());
       }
+      
+      this._sap=new SAP((this.di));
+      
     }
     public Iterable<String> nouns()
     {       
         Bag<String> NounsTmp=new Bag<>();
           
-            for (String string:SynsetStrings) 
+            for (String string:_synsetStrings) 
                 {
                  int subtIndex=0;subtIndex=string.indexOf(",");
                  NounsTmp.add(string.substring(subtIndex+1));
@@ -49,7 +55,7 @@ public class WordNet {
     
     public boolean isNoun(String word)
     {
-        for(String string:Nouns)
+        for(String string:_Nouns)
         {
             if(string.equals(word))
                 return true;
@@ -71,7 +77,7 @@ public class WordNet {
        
       
       WordNet wordNet=new WordNet(args[0], args[1]);
-      Nouns=wordNet.nouns();
+    
      
     }
    
