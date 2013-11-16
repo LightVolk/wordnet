@@ -37,7 +37,18 @@ public class SAP {
     
      return -1;   
     }
+    public int length(Iterable<Integer> v, Iterable<Integer> w)
+        {
+                int ancestor = ancestor(v, w);
+                if(ancestor != -1)
+                {
+                  BreadthFirstDirectedPaths bfpV=new BreadthFirstDirectedPaths(Dig, v);
+                  BreadthFirstDirectedPaths bfpW=new BreadthFirstDirectedPaths(Dig, w);
+                  return bfpV.distTo(ancestor) + bfpW.distTo(ancestor);
+                }
 
+                return -1;
+        }
     private LinkedBag<Integer> GetCommon(Iterable<Integer> pathVtoW,Iterable<Integer> pathWtoV,int v,int w)
     {
         LinkedBag<Integer> Common=new LinkedBag<>();
@@ -128,6 +139,52 @@ public class SAP {
      
      System.out.println(sap.ancestor(12, 1));
     // System.out.println(sap.lenght(12, 7));
+    }
+
+    //Getting the closest ancestor for two sets of vertices. 
+    public int ancestor(Iterable<Integer> v, Iterable<Integer> w) {
+      
+        BreadthFirstDirectedPaths bfpV=new BreadthFirstDirectedPaths(Dig, v);
+        BreadthFirstDirectedPaths bfpW=new BreadthFirstDirectedPaths(Dig, w);
+        LinkedBag<Integer> Common=new LinkedBag<>();
+         for (Iterator it = v.iterator(); it.hasNext();) {
+            Object object = it.next();
+             for (Iterator it1 = w.iterator(); it1.hasNext();) {
+                 Object object1 = it1.next();
+                 Common.add(ancestor((Integer)object, (Integer)object1));
+             }
+        }
+         Integer minPathV=-1,minPathW=-1;
+        Integer tmpV=0,tmpW=0;
+        Integer commonElemV=0,commonElemW=0;
+        boolean firstTime=false;
+        for (Iterator it = Common.iterator(); it.hasNext();) {
+            Object object = it.next();
+            
+            tmpV=bfpV.distTo((Integer)object);
+            if(firstTime==false)
+            {
+            minPathV=tmpV;
+            firstTime=true;
+            }
+            
+            if(minPathV<tmpV)
+            {
+                minPathV=tmpV;
+                commonElemV=(Integer)object;
+            }
+            
+            if(minPathW<tmpW)
+            {
+                minPathW=tmpW;
+                commonElemW=(Integer)object;
+            }
+        }
+        
+        if(minPathV<=minPathW)
+            return commonElemV;
+        else return commonElemW;
+         
     }
 
   
