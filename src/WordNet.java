@@ -42,9 +42,8 @@ public class WordNet {
                 {
                  int subtIndex=0;subtIndex=string.indexOf(",");
                  NounsTmp.add(string.substring(subtIndex+1));
-               //  tmp=indexOfNouns.parseInt(string.substring(0, subtIndex).toString());
-               //  IndexesOfNouns.add(tmp);
-                }                          
+                }
+          
         return (Iterable<String>)NounsTmp;   
     }
     
@@ -72,53 +71,10 @@ public class WordNet {
        
       
       WordNet wordNet=new WordNet(args[0], args[1]);
-      wordNet.nouns();
-      wordNet.GetGraph();
+      Nouns=wordNet.nouns();
+     
     }
    
-    
-    private Bag<Bag<Integer>> GetGraph()
-    {
-        
-        
-      
-        
-        Bag<Bag<Integer>> WordNetIndexGraph;
-        WordNetIndexGraph = new Bag<>();
-        
-        Iterator<String> iterator=HyperNymsStrings.iterator();
-       /*
-        for(int i=0;i<HyperNymsStrings.size();i++)
-        {
-            Vector<Integer> Vertexes=new Vector<>();// indexes of ","
-            String hyperStr=iterator.next();
-            Integer firstIndex=0;
-            String subStr=hyperStr.substring(firstIndex,hyperStr.indexOf(","));
-            subStr.getBytes();
-            Vertexes.add(Integer.parseInt(subStr));
-            int subStrIndexNext=hyperStr.indexOf(",");//index at first time
-            while(subStrIndexNext!=-1)
-            {
-               Integer tmpIndex=hyperStr.indexOf(",",subStrIndexNext);
-               
-               subStr=hyperStr.substring(tmpIndex+1);
-               Vertexes.add(Integer.parseInt(subStr));
-               
-               subStrIndexNext=subStr.indexOf(",");
-               WordNetIndexGraph.add(Vertexes);
-            }
-            WordNetIndexGraph.getClass();
-            System.out.println("\n");
-            for(Integer vert:Vertexes)
-            {
-            System.out.println("vertx: "+vert+" Vertex.size() "+Vertexes.size());
-            }
-            System.out.println("\n");
-            
-        }
-               */
-       return new Bag<Bag<Integer>>();     
-    }
- 
+   
     
 }

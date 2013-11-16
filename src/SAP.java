@@ -50,12 +50,25 @@ public class SAP {
             {
                 Object object1 = it1.next();
                 if((Iterator)object==(Iterator)object1)
-                    Common.add(w); /// add Common elements.
+                    Common.add((Integer)object); /// add Common elements.
             }
         }
         }
-        
-       return null;
+        else if(pathVtoW!=null&&pathWtoV==null)
+        {
+            for (Iterator it = pathVtoW.iterator(); it.hasNext();) {
+                Object object = it.next();
+                Common.add((Integer)object);
+            }
+        }
+        else if(pathWtoV!=null&&pathVtoW==null)
+        {
+            for (Iterator it = pathWtoV.iterator(); it.hasNext();) {
+                Object object = it.next();
+                Common.add((Integer)object);
+            }
+        }
+       return Common;
     }
     // a Common ancestor of v and w that participates in a shortest ancestral path; -1 if no such path
     public int ancestor(int v,int w)
@@ -71,17 +84,7 @@ public class SAP {
      
         
         
-        
-        for (Iterator it = pathVtoW.iterator(); it.hasNext();) 
-        {
-            Object object = it.next();
-            for (Iterator it1 = pathWtoV.iterator(); it1.hasNext();)
-            {
-                Object object1 = it1.next();
-                if((Iterator)object==(Iterator)object1)
-                    Common.add(w); /// add Common elements.
-            }
-        }
+        Common=GetCommon(pathVtoW, pathWtoV, v, w);
         
         Integer minPathV=-1,minPathW=-1;
         Integer tmpV=0,tmpW=0;
@@ -123,7 +126,7 @@ public class SAP {
 
      SAP sap = new SAP(di);
      
-     System.out.println(sap.ancestor(12, 5));
+     System.out.println(sap.ancestor(12, 1));
     // System.out.println(sap.lenght(12, 7));
     }
 
